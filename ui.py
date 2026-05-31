@@ -60,15 +60,23 @@ class QuizInterface:
         if self.quiz.still_has_questions():
             q_text = self.quiz.next_question()
             self.canvas.itemconfig(self.question_text, text = q_text)
-
-            self.score_label.config(text = f"Score: {self.quiz.score}")
+            self.score_label.config(text=f"Score: {self.quiz.score} / {self.quiz.question_number}")
+            self.true_button.config(state="normal")  # ← re-enable here
+            self.false_button.config(state="normal")  # ← re-enable here
         else:
-            self.canvas.itemconfig(self.question_text,text = f"Quiz is completed. Your Score: {self.quiz.score}/10")
-            self.true_button.config(state = "disabled")
+            self.canvas.itemconfig(self.question_text, text=f"Quiz completed!")  # ← add this
+            self.score_label.config(text=f"Score: {self.quiz.score} / {self.quiz.question_number}")
+            self.true_button.config(state="disabled")
             self.false_button.config(state="disabled")
+
     def true_pressed(self):
+        self.true_button.config(state="disabled")
+        self.false_button.config(state="disabled")
         self.give_feedback(self.quiz.check_answer("True"))
+
     def false_pressed(self):
+        self.true_button.config(state="disabled")
+        self.false_button.config(state="disabled")
         self.give_feedback(self.quiz.check_answer('False'))
 
     def give_feedback(self,is_right):
@@ -77,14 +85,4 @@ class QuizInterface:
             self.canvas.config(bg = 'lime green')
         else:
             self.canvas.config(bg = 'red')
-
         self.window.after(1000, self.get_next_question)
-
-
-
-
-
-
-
-
-
